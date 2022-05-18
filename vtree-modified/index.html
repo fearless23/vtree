@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Online JSON to Diagram</title>
+  <style>
+    svg.vtree {
+      overflow: hidden;
+      background: #ffffff;
+      -webkit-box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);
+      -moz-box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);
+      box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);
+    }
+  </style>
+  <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+  <script src="vtree.js"></script>
+
+  <!-- How to use debug mode.
+  1. open browser's developer tools.
+  2. input the following command.
+     vt.debug(true).update()
+-->
+
+  <script type="text/javascript">
+
+    window.onload = function () {
+      const container = document.getElementById("container");
+      const msg = document.getElementById("msg");
+      const vt = new VTree(container, { width: 1900, height: 900 });
+      const reader = new VTree.reader.Object();
+
+      function updateTree() {
+        const s = document.getElementById("from-text").value;
+        msg.innerHTML = '';
+        try {
+          const jsonData = JSON.parse(s);
+          const data = reader.read(jsonData);
+          vt.data(data).update();
+        } catch (e) {
+          msg.innerHTML = 'JSON parse error: ' + e.message;
+        }
+
+      }
+      document.getElementById("go-button").onclick = updateTree;
+
+      function createSvgString() {
+        document.getElementById("svg-text").value = vt.createSvgString();
+      }
+
+      document.getElementById("svg-button").onclick = createSvgString;
+    };
+
+  </script>
+
+</head>
+
+<body>
+  <div class="container">
+
+    <div style="margin-top: 1em;">
+      <label for="from-text">JSON</label><br>
+      <textarea id="from-text" rows="6"
+        cols="80">[{ "array": [ 1, 2, [3, 4], 5 ], "boolean": true, "null": null, "number": 123, "object": { "a": "b", "c": "d", "e": "f" }, "string": "Hello World" }, { "|": "|", "  ": { "ʕ": "" }, " ": ["◕", [ { "hello! ": "<ﾆフ" } ], "◕"], "_": { "": "ʔ" } }]</textarea>
+    </div>
+
+    <div style="margin-top: 1em;">
+      <input id="go-button" type="button" value="Visualize">
+    </div>
+
+    <div id="msg" style="color: red;"></div>
+
+    <div id="container"></div>
+
+    <div style="margin-top: 1em;">
+      <input id="svg-button" type="button" value="Get SVG String">
+    </div>
+
+    <div style="margin-top: 1em;">
+      <p>If you want to export the diagram as a svg file, copy the following text into a text editor and save the file
+        with a .svg extension.</p>
+      <textarea id="svg-text" rows="6" cols="80"></textarea>
+    </div>
+
+  </div>
+</body>
+
+</html>
