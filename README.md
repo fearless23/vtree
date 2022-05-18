@@ -9,4 +9,6 @@ Steps
 - run vtree-modified/index.html
 
 ## use from github
-use repo/vtree-modified/vtree.js as script to your index.html or JS project
+use repo/vtree-modified/vtree.js as script to your index.html or JS project  
+
+vtree.js link: https://raw.githubusercontent.com/fearless23/vtree/main/vtree-modified/vtree.js

@@ -5,15 +5,21 @@
   <meta charset="utf-8">
   <title>Online JSON to Diagram</title>
   <style>
+    *,*::after,*::before{
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
     svg.vtree {
       overflow: hidden;
-      background: #ffffff;
-      -webkit-box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);
-      -moz-box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);
-      box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);
+      background: #ccc;
+      /* -webkit-box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5); */
+      /* -moz-box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5); */
+      /* box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5); */
     }
   </style>
   <script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/canvg/3.0.10/umd.min.js" charset="utf-8"></script>
   <script src="vtree.js"></script>
 
   <!-- How to use debug mode.
@@ -27,7 +33,12 @@
     window.onload = function () {
       const container = document.getElementById("container");
       const msg = document.getElementById("msg");
-      const vt = new VTree(container, { width: 1900, height: 900 });
+      const _width = window.innerWidth || document.documentElement.clientWidth ||
+        document.body.clientWidth;
+
+      const width = _width - 52;
+
+      const vt = new VTree(container, { width, height: 500 });
       const reader = new VTree.reader.Object();
 
       function updateTree() {
@@ -45,7 +56,13 @@
       document.getElementById("go-button").onclick = updateTree;
 
       function createSvgString() {
-        document.getElementById("svg-text").value = vt.createSvgString();
+        const svg_string = vt.createSvgString();
+        document.getElementById("svg-text").value = svg_string;
+
+        
+        const canvas = document.querySelector('canvas');
+        const ctx = canvas.getContext('2d');
+        canvg.Canvg.fromString(ctx, svg_string).start();
       }
 
       document.getElementById("svg-button").onclick = createSvgString;
@@ -56,32 +73,36 @@
 </head>
 
 <body>
-  <div class="container">
-
+  <div class="container" style="padding:1em;">
+    <h1>JSON to Visual Tree</h1>
+    <h2>Convert your json to visual tree</h2>
     <div style="margin-top: 1em;">
-      <label for="from-text">JSON</label><br>
+      <label for="from-text">Input your JSON here...</label><br>
       <textarea id="from-text" rows="6"
         cols="80">[{ "array": [ 1, 2, [3, 4], 5 ], "boolean": true, "null": null, "number": 123, "object": { "a": "b", "c": "d", "e": "f" }, "string": "Hello World" }, { "|": "|", "  ": { "ʕ": "" }, " ": ["◕", [ { "hello! ": "<ﾆフ" } ], "◕"], "_": { "": "ʔ" } }]</textarea>
     </div>
 
-    <div style="margin-top: 1em;">
-      <input id="go-button" type="button" value="Visualize">
+    <div style="margin: 1em 0;">
+      <button id="go-button">Visualize</button>
     </div>
 
     <div id="msg" style="color: red;"></div>
 
-    <div id="container"></div>
+    <div id="container"  style="border:1px solid #ccc"></div>
 
     <div style="margin-top: 1em;">
       <input id="svg-button" type="button" value="Get SVG String">
     </div>
 
     <div style="margin-top: 1em;">
-      <p>If you want to export the diagram as a svg file, copy the following text into a text editor and save the file
-        with a .svg extension.</p>
       <textarea id="svg-text" rows="6" cols="80"></textarea>
     </div>
 
+    <div style="margin-top: 1em;" >
+      <canvas id="myCanvas"></canvas>
+      <div id="image" style="border:1px solid black"></div>
+    </div>
+   
   </div>
 </body>
 
