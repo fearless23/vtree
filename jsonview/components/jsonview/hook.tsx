@@ -5,6 +5,7 @@ interface UseJsonVisualizerProps {
   height?: number,
   width?: number,
   json: unknown,
+  // autoRender?:boolean
 }
 
 export const useJsonVisualizer = (params: UseJsonVisualizerProps) => {
@@ -16,6 +17,7 @@ export const useJsonVisualizer = (params: UseJsonVisualizerProps) => {
     if (container) {
       container.innerHTML = ''
       const x = visualize({ ...params, container })
+      // if(params.autoRender) x.render()
       set_visualizer(x)
     }
     return () => { }

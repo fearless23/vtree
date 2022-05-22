@@ -33,54 +33,15 @@ const JSONDATA = {
   }
 }
 
-const JSONDATA2 = {
-  "email_in_both_pools": [
-    {
-      "email": "info@myrealtorerica.com",
-      "new_pool_data": {
-        "user_id": "02276e33-56a3-44ce-95ce-bfdac6283897",
-        "email": "info@myrealtorerica.com",
-        "pool_type": "NEW",
-        "is_active": 1,
-        "created_at": "2021-06-03T19:05:56.494Z",
-        "user_status": "CONFIRMED"
-      },
-      "old_pool_data": {
-        "user_id": "02276e33-56a3-44ce-95ce-bfdac6283897",
-        "email": "info@myrealtorerica.com",
-        "pool_type": "OLD",
-        "is_active": 1,
-        "created_at": "2021-04-05T11:47:17.027Z",
-        "user_status": "CONFIRMED"
-      }
-    },
-    {
-      "email": "aj32004@gmail.com",
-      "new_pool_data": {
-        "user_id": "053807b0-e542-4168-b279-31b768d8aa34",
-        "email": "aj32004@gmail.com",
-        "pool_type": "NEW",
-        "is_active": 1,
-        "created_at": "2021-06-03T15:27:12.542Z",
-        "user_status": "CONFIRMED"
-      },
-      "old_pool_data": {
-        "user_id": "053807b0-e542-4168-b279-31b768d8aa34",
-        "email": "aj32004@gmail.com",
-        "pool_type": "OLD",
-        "is_active": 1,
-        "created_at": "2021-01-21T22:08:52.797Z",
-        "user_status": "CONFIRMED"
-      }
-    },
-  ],
-}
-
 const Home: NextPage = () => {
-  const getSvg = (svg:string) => {
+  const getSvg = (svg: string) => {
     console.log('svg', svg)
   }
-  
+
+  const [json, set_json] = React.useState(JSONDATA);
+  const [raw_json, set_raw_json] = React.useState<string>(JSON.stringify(JSONDATA, null, 2));
+  const [json_error, set_json_error] = React.useState<string>('');
+
   return (
     <div className={styles.container}>
       <Head>
@@ -88,7 +49,31 @@ const Home: NextPage = () => {
         <meta name="description" content="JSON View" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <JsonView json={JSONDATA} getSvg={getSvg} />
+      <h1>JSON to Visual Tree</h1>
+      <h2>Convert your json to visual tree, JASSI: https://github.com/fearless23</h2>
+      <div style={{ marginTop: '1em' }}>
+        <label htmlFor={"from-text"}>Input your JSON here...</label>
+        <br></br>
+        <textarea id="from-text" rows={6}
+          value={raw_json}
+          onChange={e => {
+            set_raw_json(e.target.value)
+            try {
+              set_json_error('');
+              const _json = JSON.parse(e.target.value);
+              set_json(_json);
+            } catch (error) {
+              set_json_error((error as Error).message as string)
+            }
+          }}
+          cols={80}></textarea>
+      </div>
+      {json_error && (
+        <div style={{ marginTop: '1em', color: 'red' }}>
+          {json_error}
+        </div>
+      )}
+      <JsonView json={json} getSvg={getSvg} autoRender />
     </div>
   )
 }
