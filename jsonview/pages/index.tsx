@@ -2,7 +2,8 @@ import React from 'react';
 import Head from 'next/head'
 import type { NextPage } from 'next'
 import styles from '../styles/Home.module.css'
-import JsonView from '../components/jsonview';
+// import JsonView from '../components/jsonview/';
+import JsonView from '../components/jsonview/modified';
 
 const JSONDATA = {
   "employee": {
