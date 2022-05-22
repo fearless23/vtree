@@ -108,12 +108,16 @@ export const jsonToNode = (json: unknown, linkName: string): ObjectTypeNode => {
 
 export const showJsonData = (jsonToNodeData: ObjectTypeNode): unknown => {
   const children = jsonToNodeData.children;
+  const data = jsonToNodeData.data;
   const type = jsonToNodeData.type;
   const decorators = jsonToNodeData.decorators.map(i => i.linkName);
 
+  const childs = JSON.parse(JSON.stringify(children.map(i => showJsonData(i as ObjectTypeNode))))
+
   const show = {
     id: jsonToNodeData.id,
-    children: children.map(i => showJsonData(i as ObjectTypeNode)),
+    children: childs,
+    data: JSON.parse(JSON.stringify(data)),
     type,
     decorators,
   }
