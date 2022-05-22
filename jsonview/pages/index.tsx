@@ -80,6 +80,7 @@ const Home: NextPage = () => {
   const getSvg = (svg:string) => {
     console.log('svg', svg)
   }
+  
   return (
     <div className={styles.container}>
       <Head>
