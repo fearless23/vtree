@@ -1,6 +1,6 @@
 import React from 'react';
-import { VisualizeOutput } from '../vtree';
 import { useJsonVisualizer } from './hook';
+import { VisualizeOutput } from '@jaspreet23/json-vtree';
 
 interface JsonViewProps {
   height?: number,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { visualize, VisualizeOutput } from '../vtree';
+import { visualize, VisualizeOutput } from '@jaspreet23/json-vtree';
 
 interface UseJsonVisualizerProps {
   height?: number,
